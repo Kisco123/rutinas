@@ -2,7 +2,7 @@
   import type { PageData } from './$types';
   let { data }: { data: PageData } = $props();
 
-  const name = data.profile.full_name?.trim() || 'qué bueno verte';
+  const name = $derived(data.profile.full_name?.trim() || 'qué bueno verte');
 
   const cards = [
     { href: '/correo', icon: '📧', title: 'Ordenar mi correo', state: 'Conecta Gmail en una próxima versión', accent: true },
