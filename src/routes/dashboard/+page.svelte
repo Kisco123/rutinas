@@ -54,6 +54,15 @@
   <h1 class="text-3xl font-bold">¿Qué quieres hacer hoy?</h1>
 </section>
 
+{#if data.summary}
+  <div class="mb-8 p-5 rounded-xl bg-gradient-to-br from-amber-50 to-white border border-amber-200">
+    <div class="flex items-start gap-3">
+      <span class="text-2xl">☀️</span>
+      <p class="text-slate-800 leading-relaxed">{data.summary}</p>
+    </div>
+  </div>
+{/if}
+
 <div class="grid gap-4 sm:grid-cols-2">
   {#each cards as card}
     <a
