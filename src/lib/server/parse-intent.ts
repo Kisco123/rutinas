@@ -1,5 +1,5 @@
-import type { GoogleGenAI } from '@google/genai';
-import { GEMINI_MODELS } from './gemini';
+import type Groq from 'groq-sdk';
+import { GROQ_MODELS } from './groq';
 
 export type ParsedEvent = {
   type: 'event';
@@ -69,34 +69,26 @@ Reglas:
 - Si dudas, confidence < 0.6.`;
 
 export async function parseIntent(
-  client: GoogleGenAI,
+  client: Groq,
   text: string,
   nowIso: string,
   timezone: string
 ): Promise<ParseResult> {
-  const userMessage = `Fecha y hora actuales: ${nowIso}\nZona horaria: ${timezone}\n\nFrase del usuario: ${text}`;
-
-  const response = await client.models.generateContent({
-    model: GEMINI_MODELS.flash,
-    contents: [
+  const completion = await client.chat.completions.create({
+    model: GROQ_MODELS.llama,
+    temperature: 0.2,
+    max_tokens: 500,
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
       {
         role: 'user',
-        parts: [{ text: userMessage }]
+        content: `Fecha y hora actuales: ${nowIso}\nZona horaria: ${timezone}\n\nFrase del usuario: ${text}`
       }
-    ],
-    config: {
-      systemInstruction: SYSTEM_PROMPT,
-      responseMimeType: 'application/json',
-      temperature: 0.2,
-      maxOutputTokens: 500
-    }
+    ]
   });
 
-  const raw =
-    (typeof response.text === 'string' ? response.text : undefined) ??
-    response.candidates?.[0]?.content?.parts?.[0]?.text ??
-    '';
-
+  const raw = completion.choices[0]?.message?.content ?? '';
   if (!raw) {
     return { type: 'unknown', confidence: 0, reason: 'Respuesta vacía del modelo.' };
   }

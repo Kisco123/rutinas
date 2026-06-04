@@ -5,7 +5,8 @@ import {
 import {
   SUPABASE_SERVICE_ROLE_KEY,
   ANTHROPIC_API_KEY,
-  GEMINI_API_KEY
+  GEMINI_API_KEY,
+  GROQ_API_KEY
 } from '$env/static/private';
 
 export const env = {
@@ -13,5 +14,6 @@ export const env = {
   supabaseAnonKey: PUBLIC_SUPABASE_ANON_KEY,
   supabaseServiceRoleKey: SUPABASE_SERVICE_ROLE_KEY,
   anthropicApiKey: ANTHROPIC_API_KEY,
-  geminiApiKey: GEMINI_API_KEY
+  geminiApiKey: GEMINI_API_KEY,
+  groqApiKey: GROQ_API_KEY
 };
