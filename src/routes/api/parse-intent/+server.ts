@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getAnthropicClient } from '$lib/server/anthropic';
+import { getGeminiClient } from '$lib/server/gemini';
 import { parseIntent } from '$lib/server/parse-intent';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -20,7 +20,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const timezone = profile?.timezone ?? 'Europe/Madrid';
   const nowIso = new Date().toISOString();
 
-  const result = await parseIntent(getAnthropicClient(), body.text, nowIso, timezone);
+  const result = await parseIntent(getGeminiClient(), body.text, nowIso, timezone);
 
   return json(result);
 };

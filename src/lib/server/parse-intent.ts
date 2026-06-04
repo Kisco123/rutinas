@@ -1,5 +1,5 @@
-import type Anthropic from '@anthropic-ai/sdk';
-import { MODELS } from './anthropic';
+import type { GoogleGenAI } from '@google/genai';
+import { GEMINI_MODELS } from './gemini';
 
 export type ParsedEvent = {
   type: 'event';
@@ -69,35 +69,39 @@ Reglas:
 - Si dudas, confidence < 0.6.`;
 
 export async function parseIntent(
-  client: Anthropic,
+  client: GoogleGenAI,
   text: string,
   nowIso: string,
   timezone: string
 ): Promise<ParseResult> {
-  const response = await client.messages.create({
-    model: MODELS.haiku,
-    max_tokens: 500,
-    system: [
-      {
-        type: 'text',
-        text: SYSTEM_PROMPT,
-        cache_control: { type: 'ephemeral' }
-      }
-    ],
-    messages: [
+  const userMessage = `Fecha y hora actuales: ${nowIso}\nZona horaria: ${timezone}\n\nFrase del usuario: ${text}`;
+
+  const response = await client.models.generateContent({
+    model: GEMINI_MODELS.flash,
+    contents: [
       {
         role: 'user',
-        content: `Fecha y hora actuales: ${nowIso}\nZona horaria: ${timezone}\n\nFrase del usuario: ${text}`
+        parts: [{ text: userMessage }]
       }
-    ]
+    ],
+    config: {
+      systemInstruction: SYSTEM_PROMPT,
+      responseMimeType: 'application/json',
+      temperature: 0.2,
+      maxOutputTokens: 500
+    }
   });
 
-  const block = response.content[0];
-  if (!block || block.type !== 'text') {
+  const raw =
+    (typeof response.text === 'string' ? response.text : undefined) ??
+    response.candidates?.[0]?.content?.parts?.[0]?.text ??
+    '';
+
+  if (!raw) {
     return { type: 'unknown', confidence: 0, reason: 'Respuesta vacía del modelo.' };
   }
 
-  return validateParseResult(block.text);
+  return validateParseResult(raw);
 }
 
 export function validateParseResult(raw: string): ParseResult {
