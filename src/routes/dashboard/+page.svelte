@@ -4,12 +4,47 @@
 
   const name = $derived(data.profile.full_name?.trim() || 'qué bueno verte');
 
-  const cards = [
-    { href: '/correo', icon: '📧', title: 'Ordenar mi correo', state: 'Conecta Gmail en una próxima versión', accent: true },
-    { href: '/dashboard/eventos', icon: '📅', title: 'Mis citas', state: 'Sin citas guardadas' },
-    { href: '/dashboard/facturas', icon: '💰', title: 'Mis facturas', state: 'Sin facturas guardadas' },
-    { href: '/dashboard/agregar', icon: '➕', title: 'Añadir algo', state: 'Citas, facturas, recordatorios' }
-  ];
+  function formatNext(iso: string): string {
+    try {
+      return new Date(iso).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return iso;
+    }
+  }
+
+  const cards = $derived([
+    {
+      href: '/correo',
+      icon: '📧',
+      title: 'Ordenar mi correo',
+      state: 'Conecta Gmail en una próxima versión',
+      accent: true
+    },
+    {
+      href: '/dashboard/eventos',
+      icon: '📅',
+      title: 'Mis citas',
+      state: data.upcomingEventsCount === 0
+        ? 'Sin citas próximas'
+        : data.nextEvent
+          ? `${data.upcomingEventsCount} próximas · siguiente: ${formatNext(data.nextEvent.starts_at)}`
+          : `${data.upcomingEventsCount} próximas`
+    },
+    {
+      href: '/dashboard/facturas',
+      icon: '💰',
+      title: 'Mis facturas',
+      state: data.upcomingBillsCount === 0
+        ? 'Sin facturas próximas'
+        : `${data.upcomingBillsCount} vence${data.upcomingBillsCount === 1 ? '' : 'n'} esta semana`
+    },
+    {
+      href: '/dashboard/agregar',
+      icon: '➕',
+      title: 'Añadir algo',
+      state: 'Citas, facturas, recordatorios'
+    }
+  ]);
 </script>
 
 <svelte:head><title>Dashboard — Rutinas</title></svelte:head>
