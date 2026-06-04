@@ -6,9 +6,9 @@
 
   const cards = [
     { href: '/correo', icon: '📧', title: 'Ordenar mi correo', state: 'Conecta Gmail en una próxima versión', accent: true },
-    { href: '/eventos', icon: '📅', title: 'Mis citas', state: 'Sin citas guardadas' },
-    { href: '/facturas', icon: '💰', title: 'Mis facturas', state: 'Sin facturas guardadas' },
-    { href: '/agregar', icon: '➕', title: 'Añadir algo', state: 'Citas, facturas, recordatorios' }
+    { href: '/dashboard/eventos', icon: '📅', title: 'Mis citas', state: 'Sin citas guardadas' },
+    { href: '/dashboard/facturas', icon: '💰', title: 'Mis facturas', state: 'Sin facturas guardadas' },
+    { href: '/dashboard/agregar', icon: '➕', title: 'Añadir algo', state: 'Citas, facturas, recordatorios' }
   ];
 </script>
 
