@@ -1,19 +1,21 @@
-import {
-  PUBLIC_SUPABASE_URL,
-  PUBLIC_SUPABASE_ANON_KEY
-} from '$env/static/public';
-import {
-  SUPABASE_SERVICE_ROLE_KEY,
-  ANTHROPIC_API_KEY,
-  GEMINI_API_KEY,
-  GROQ_API_KEY
-} from '$env/static/private';
+import { env as publicEnv } from '$env/dynamic/public';
+import { env as privateEnv } from '$env/dynamic/private';
 
+/**
+ * Helper centralizado de variables de entorno.
+ *
+ * Usamos `$env/dynamic/*` (no `static/*`) porque en Cloudflare Workers los secretos
+ * solo existen en runtime, no en build time. Con `static/*` el build falla con
+ * "Missing export" porque las variables aún no están definidas durante `npm run build`.
+ *
+ * Los `!` afirman no-null: si una de estas variables falta en runtime, la app
+ * fallará en la primera llamada — preferible a fallar silenciosamente.
+ */
 export const env = {
-  supabaseUrl: PUBLIC_SUPABASE_URL,
-  supabaseAnonKey: PUBLIC_SUPABASE_ANON_KEY,
-  supabaseServiceRoleKey: SUPABASE_SERVICE_ROLE_KEY,
-  anthropicApiKey: ANTHROPIC_API_KEY,
-  geminiApiKey: GEMINI_API_KEY,
-  groqApiKey: GROQ_API_KEY
+  supabaseUrl: publicEnv.PUBLIC_SUPABASE_URL!,
+  supabaseAnonKey: publicEnv.PUBLIC_SUPABASE_ANON_KEY!,
+  supabaseServiceRoleKey: privateEnv.SUPABASE_SERVICE_ROLE_KEY!,
+  anthropicApiKey: privateEnv.ANTHROPIC_API_KEY!,
+  geminiApiKey: privateEnv.GEMINI_API_KEY!,
+  groqApiKey: privateEnv.GROQ_API_KEY!
 };
