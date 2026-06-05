@@ -3,9 +3,9 @@
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
   // Derive date and time inputs from the stored ISO starts_at
-  const startsDate = new Date(data.event.starts_at);
-  const isoDate = startsDate.toISOString().slice(0, 10);
-  const isoTime = startsDate.toTimeString().slice(0, 5);
+  const startsDate = $derived(new Date(data.event.starts_at));
+  const isoDate = $derived(startsDate.toISOString().slice(0, 10));
+  const isoTime = $derived(startsDate.toTimeString().slice(0, 5));
 </script>
 
 <svelte:head><title>Editar cita — Rutinas</title></svelte:head>

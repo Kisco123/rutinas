@@ -42,15 +42,20 @@
 {:else}
   <ul class="space-y-3">
     {#each data.events as event}
-      <li class="bg-white rounded-lg border border-slate-200 p-4 flex items-center justify-between">
-        <div>
+      <li class="bg-white rounded-lg border border-slate-200 hover:border-slate-400 transition flex items-stretch">
+        <a href="/dashboard/eventos/{event.id}" class="flex-1 p-4 cursor-pointer">
           <p class="font-medium">{event.title}</p>
           <p class="text-sm text-slate-600">{formatDate(event.starts_at)}{#if event.location} · {event.location}{/if}</p>
           <span class="inline-block mt-1 text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700">{event.category}</span>
-        </div>
-        <form method="POST" action="?/delete">
+        </a>
+        <form method="POST" action="?/delete" class="flex items-center pr-4">
           <input type="hidden" name="id" value={event.id} />
-          <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium" aria-label="Eliminar">
+          <button
+            type="submit"
+            onclick={(e) => { if (!confirm('¿Seguro que quieres borrar esta cita?')) e.preventDefault(); }}
+            class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1"
+            aria-label="Eliminar"
+          >
             Eliminar
           </button>
         </form>
