@@ -14,7 +14,7 @@
 
   const cards = $derived([
     {
-      href: '/correo',
+      href: '/dashboard/correo',
       icon: '📧',
       title: 'Ordenar mi correo',
       state: 'Conecta Gmail en una próxima versión',
